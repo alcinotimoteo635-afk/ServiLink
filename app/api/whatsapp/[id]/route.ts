@@ -6,7 +6,6 @@ import { categoriaPorSlug } from "@/lib/categorias";
 import { UUID } from "@/lib/validar";
 import { dispositivoAtual } from "@/lib/seguranca";
 import { profissionaisContactadosHoje } from "@/lib/whatsapp-limite";
-import { profissionaisContactadosHoje } from "@/lib/whatsapp-limite";
 
 export const dynamic = "force-dynamic";
 
