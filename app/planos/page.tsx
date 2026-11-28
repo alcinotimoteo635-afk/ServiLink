@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { Check } from "lucide-react";
 import { criarClienteAdmin } from "@/lib/supabase/admin";
 import { obterSessao } from "@/lib/sessao";
-import { PLANOS_VISIVEIS } from "@/lib/config";
+import { isProEnabled } from "@/lib/config";
 import { calcularPlano, lerPlano } from "@/lib/plano";
 import { BENEFICIOS_ESSENCIAL, BENEFICIOS_PRO } from "@/lib/planos-texto";
 import { opcoesPagamento, reconciliarPendentes } from "@/lib/pagamento-plano";
@@ -16,7 +16,7 @@ export const metadata = { title: "Planos - ServiLink" };
 const dia = (d: Date | null) => (d ? fmtData(d.toISOString()).slice(0, 10) : "-");
 
 export default async function Planos({ searchParams }: { searchParams: { pedido?: string } }) {
-  if (!PLANOS_VISIVEIS) redirect("/");
+  if (!isProEnabled) redirect("/");
   const sessao = await obterSessao();
   const ehPro = sessao?.role === "profissional" && sessao.status === "aprovado";
   const admin = criarClienteAdmin();
@@ -65,9 +65,12 @@ export default async function Planos({ searchParams }: { searchParams: { pedido?
       )}
 
       {podeComprar && pro && pro.ativo && !op.disponivel && (
-        <p className="mt-6 rounded-2xl border border-amber-300 bg-amber-50 p-5 text-base text-amber-900">
-          Os pagamentos ainda não estão ativos. Assim que estiverem, podes comprar o PRO aqui.
-        </p>
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
+          <h2 className="text-xl font-bold text-escuro">Comprar o plano {pro.nome}</h2>
+          <button type="button" disabled aria-disabled="true" className="mt-3 w-full cursor-not-allowed rounded-xl bg-slate-200 px-6 py-3 text-base font-bold text-slate-500 sm:w-auto">
+            Disponível em breve
+          </button>
+        </div>
       )}
       {podeComprar && pro && pro.ativo && op.disponivel && <FormPagamento nome={pro.nome} preco={pro.preco} dias={pro.dias} pedidoAtual={pedido} />}
 

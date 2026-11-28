@@ -1,16 +1,15 @@
 import { criarClienteAdmin } from "@/lib/supabase/admin";
 import { lerPlano } from "@/lib/plano";
-import { skywalletConfigurado } from "@/lib/skywallet";
-import { PLANOS_VISIVEIS } from "@/lib/config";
+import { isProEnabled, isSkyWalletConfigured } from "@/lib/config";
 import { atualizarPlanoPro } from "../actions";
 
 export default async function PlanoPro() {
   const pro = await lerPlano(criarClienteAdmin(), "pro");
-  const sw = skywalletConfigurado();
+  const sw = isSkyWalletConfigured();
   return (
     <div className="max-w-xl space-y-4 text-base">
       <p className="rounded-xl bg-hero p-3 text-escuro">
-        SkyWallet: <strong>{sw ? "credenciais configuradas" : "credenciais em falta (SKYWALLET_SK_ID, SKYWALLET_API_KEY, SKYWALLET_WEBHOOK_SECRET)"}</strong> · Planos no site: <strong>{PLANOS_VISIVEIS ? "visíveis" : "escondidos (lib/config.ts)"}</strong>
+        SkyWallet: <strong>{sw ? "ligada" : "Pagamentos em breve (configurar SkyWallet na Vercel: Settings > Environment Variables)"}</strong> · Planos no site: <strong>{isProEnabled ? "visíveis" : "escondidos (lib/config.ts)"}</strong>
       </p>
       {!pro ? <p className="text-red-700">Plano PRO não encontrado. Corre a migração supabase/migracao-v3.sql.</p> : (
         <form action={atualizarPlanoPro} className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5">

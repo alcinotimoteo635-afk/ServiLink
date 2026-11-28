@@ -1,6 +1,5 @@
 import { criarClienteAdmin } from "@/lib/supabase/admin";
-import { captchaConfigurado } from "@/lib/seguranca";
-import { skywalletConfigurado } from "@/lib/skywallet";
+import { isCaptchaConfigured, isSkyWalletConfigured } from "@/lib/config";
 import { calcularPlano } from "@/lib/plano";
 import { categoriaPorSlug } from "@/lib/categorias";
 
@@ -69,10 +68,23 @@ export default async function Resumo() {
           </div>
         ))}
       </div>
-      <div className="mt-4 space-y-2 text-sm sm:mt-6 sm:text-base">
-        {!captchaConfigurado() && <p className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-amber-900">Captcha (Turnstile) não configurado: os formulários ficam sem proteção anti-robô.</p>}
-        {!skywalletConfigurado() && <p className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-amber-900">SkyWallet não configurada: o pagamento do PRO fica indisponível.</p>}
-      </div>
+      {/* Cartoes pequenos e limpos. As chaves vao na Vercel: Settings > Environment Variables (ver lib/config.ts). */}
+      {(!isSkyWalletConfigured() || !isCaptchaConfigured()) && (
+        <div className="mt-4 grid gap-2 sm:mt-6 sm:grid-cols-2">
+          {!isSkyWalletConfigured() && (
+            <div className={caixa}>
+              <p className="text-sm font-bold text-escuro sm:text-base">Pagamentos em breve</p>
+              <p className="mt-1 text-xs text-slate-600 sm:text-sm">Configurar SkyWallet na Vercel: Settings &gt; Environment Variables.</p>
+            </div>
+          )}
+          {!isCaptchaConfigured() && (
+            <div className={caixa}>
+              <p className="text-sm font-bold text-escuro sm:text-base">Captcha desligado</p>
+              <p className="mt-1 text-xs text-slate-600 sm:text-sm">Os formulários funcionam sem captcha. Para ligar, configura o Turnstile na Vercel.</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

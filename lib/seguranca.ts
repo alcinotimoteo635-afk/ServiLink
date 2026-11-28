@@ -2,6 +2,7 @@ import crypto from "crypto";
 import { cookies, headers } from "next/headers";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { hashHmac } from "@/lib/cripto";
+import { isCaptchaConfigured } from "@/lib/config";
 
 export function ipDoPedido(): string {
   const h = headers();
@@ -47,16 +48,16 @@ export async function limparFalhas(admin: SupabaseClient, chave: string): Promis
 export const chaveIp = (prefixo: string) => `${prefixo}:ip:${crypto.createHash("sha256").update(ipDoPedido()).digest("hex").slice(0, 24)}`;
 
 // ---- CAPTCHA (Cloudflare Turnstile) -------------------------------------------------------
+// Chaves: Vercel > Settings > Environment Variables (ver lib/config.ts).
 export function captchaConfigurado(): boolean {
-  return Boolean(process.env.TURNSTILE_SECRET_KEY && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+  return isCaptchaConfigured();
 }
 
 export async function verificarCaptcha(form: FormData): Promise<boolean> {
-  const segredo = process.env.TURNSTILE_SECRET_KEY;
-  if (!segredo) {
-    // Sem chaves (ex.: desenvolvimento) nao bloqueia, mas o painel do admin mostra aviso.
-    return true;
-  }
+  // Sem as DUAS chaves (publica + secreta) o captcha nem aparece nos formularios,
+  // por isso nao pode bloquear ninguem. O painel do Admin mostra "Captcha desligado".
+  if (!isCaptchaConfigured()) return true;
+  const segredo = process.env.TURNSTILE_SECRET_KEY as string;
   const token = String(form.get("cf-turnstile-response") ?? "");
   if (!token) return false;
   try {
