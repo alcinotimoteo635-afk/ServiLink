@@ -1,53 +1,40 @@
 import Image from "next/image";
 import { PARCEIROS, ESPACOS_RESERVADOS } from "@/lib/parceiros";
 
-// Cartao de parceiro: logo, nome, selo "Parceiro Oficial" e botao "Visitar".
-// Sem parceiros na lista: mostra espacos reservados.
+// Parceiros: titulo com barra azul, e cartoes pequenos (logo em cima, nome por baixo)
+// em 2 colunas no telemovel e 4 no PC. Para juntar outro parceiro: lib/parceiros.ts.
 export default function Parceiros() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-8 sm:py-12" aria-labelledby="titulo-parceiros">
-      <h2 id="titulo-parceiros" className="text-center text-xl font-bold text-escuro sm:text-2xl md:text-3xl">Parceiros</h2>
+      <h2 id="titulo-parceiros" className="text-center text-2xl font-extrabold text-escuro sm:text-3xl">Parceiros</h2>
+      <div className="mx-auto mt-2 h-1 w-14 rounded-full bg-primaria" aria-hidden="true" />
 
       {PARCEIROS.length > 0 ? (
-        <ul className="mt-6 flex flex-wrap justify-center gap-4">
-          {PARCEIROS.map((p) => (
-            <li key={p.nome} className="w-full max-w-sm">
-              <article className="flex h-full flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm">
-                <div className={`relative h-20 w-40 overflow-hidden rounded-xl border ${p.fundoEscuro ? "border-escuro bg-black" : "border-slate-200 bg-white"}`}>
-                  <Image src={p.logo} alt={`Logo de ${p.nome}`} fill sizes="160px" className="object-contain p-2" loading="lazy" />
+        <ul className="mx-auto mt-6 grid max-w-4xl grid-cols-2 gap-3 sm:gap-5 md:grid-cols-4">
+          {PARCEIROS.map((p) => {
+            const conteudo = (
+              <>
+                <div className={`relative h-20 w-full overflow-hidden rounded-xl sm:h-24 ${p.fundoEscuro ? "bg-black" : "bg-slate-100"}`}>
+                  <Image src={p.logo} alt={`Logo de ${p.nome}`} fill sizes="(min-width:768px) 20vw, 45vw" className="object-contain p-1.5" loading="lazy" />
                 </div>
-                <div>
-                  <h3 className="text-base font-bold text-escuro sm:text-lg">
-                    {p.nome}{p.descricao ? <span className="font-medium text-slate-700"> - {p.descricao}</span> : null}
-                  </h3>
+                <p className="mt-2 text-center text-sm font-bold leading-snug text-escuro sm:text-base">{p.nome}</p>
+              </>
+            );
+            return (
+              <li key={p.nome}>
+                <div className="h-full rounded-2xl bg-white p-2.5 shadow-md ring-1 ring-slate-100">
+                  {p.link ? (
+                    <a href={p.link} target="_blank" rel="noopener noreferrer nofollow" className="block">{conteudo}</a>
+                  ) : (
+                    conteudo
+                  )}
                 </div>
-                {p.oficial && (
-                  <span className="rounded-full bg-hero px-3 py-1 text-xs font-bold text-primaria sm:text-sm">Parceiro Oficial</span>
-                )}
-                {p.link ? (
-                  <a
-                    href={p.link}
-                    target="_blank"
-                    rel="noopener noreferrer nofollow"
-                    className="mt-auto inline-flex items-center justify-center rounded-xl bg-primaria px-5 py-2 text-sm font-bold text-white hover:opacity-90"
-                  >
-                    Visitar ↗
-                  </a>
-                ) : (
-                  <span
-                    aria-disabled="true"
-                    title="Link em breve"
-                    className="mt-auto inline-flex cursor-not-allowed items-center justify-center rounded-xl bg-primaria px-5 py-2 text-sm font-bold text-white opacity-40"
-                  >
-                    Visitar ↗
-                  </span>
-                )}
-              </article>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ul>
       ) : (
-        <ul className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+        <ul className="mx-auto mt-6 grid max-w-4xl grid-cols-2 gap-3 sm:gap-5 md:grid-cols-4">
           {Array.from({ length: ESPACOS_RESERVADOS }, (_, i) => (
             <li key={i}>
               <div className="flex h-24 w-full items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-white">
