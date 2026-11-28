@@ -48,13 +48,13 @@ export default async function Inicio({ searchParams }: { searchParams: { g?: str
         </div>
         <div className="absolute inset-0 -z-10 bg-white/70" aria-hidden="true" />
 
-        <div className="mx-auto max-w-4xl px-4 py-12 text-center md:py-24">
-          <h1 className="text-[32px] font-extrabold leading-tight text-escuro md:text-[48px]">
+        <div className="mx-auto max-w-4xl px-4 py-8 text-center sm:py-12 md:py-24">
+          <h1 className="text-[26px] font-extrabold leading-tight text-escuro sm:text-[32px] md:text-[48px]">
             Encontre o profissional ideal
           </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-lg font-medium text-escuro">{SUBTITULO[grupo]}</p>
+          <p className="mx-auto mt-2 max-w-2xl text-base font-medium text-escuro sm:mt-3 sm:text-lg">{SUBTITULO[grupo]}</p>
 
-          <form action="/profissionais" method="get" className="mx-auto mt-8 flex max-w-2xl flex-col gap-3 sm:flex-row" role="search">
+          <form action="/profissionais" method="get" className="mx-auto mt-5 flex max-w-2xl flex-col gap-3 sm:mt-8 sm:flex-row" role="search">
             <input type="hidden" name="g" value={grupo} />
             <label htmlFor="q" className="sr-only">O que você precisa hoje?</label>
             <input
@@ -63,21 +63,21 @@ export default async function Inicio({ searchParams }: { searchParams: { g?: str
               type="search"
               maxLength={60}
               placeholder="O que você precisa hoje?"
-              className="h-14 flex-1 rounded-xl border-2 border-escuro/30 bg-white px-4 text-base text-texto placeholder:text-slate-600 focus:border-primaria"
+              className="h-12 w-full rounded-full border-2 border-escuro/30 bg-white px-4 text-sm text-texto placeholder:text-slate-600 focus:border-primaria sm:h-14 sm:flex-1 sm:rounded-xl sm:text-base"
               autoComplete="off"
             />
-            <button type="submit" className="h-14 rounded-xl bg-primaria px-6 text-base font-bold text-white hover:opacity-90">
+            <button type="submit" className="h-12 w-full rounded-full bg-primaria px-6 text-sm font-bold text-white hover:opacity-90 sm:h-14 sm:w-auto sm:rounded-xl sm:text-base">
               <Search className="mr-2 inline h-5 w-5" aria-hidden="true" />
               Encontrar profissional
             </button>
           </form>
 
-          <ul className="mt-5 flex flex-wrap justify-center gap-2">
+          <ul className="mt-4 flex flex-wrap justify-center gap-2 sm:mt-5">
             {categorias.slice(0, 4).map((c) => (
               <li key={c.slug}>
                 <Link
                   href={`/profissionais?g=${grupo}&categoria=${c.slug}`}
-                  className="inline-block rounded-full border border-escuro/30 bg-white px-4 py-2 text-base font-medium text-escuro hover:border-primaria"
+                  className="inline-block rounded-full border border-escuro/30 bg-white px-3 py-1.5 text-xs font-medium sm:px-4 sm:py-2 sm:text-base text-escuro hover:border-primaria"
                 >
                   {c.nome}
                 </Link>
@@ -115,19 +115,19 @@ export default async function Inicio({ searchParams }: { searchParams: { g?: str
       */}
 
       {doMes.length > 0 && (
-        <section className="bg-amber-50 py-12" aria-labelledby="titulo-mes">
+        <section className="bg-amber-50 py-8 sm:py-12" aria-labelledby="titulo-mes">
           <div className="mx-auto max-w-7xl px-4">
-            <h2 id="titulo-mes" className="text-2xl font-bold text-escuro md:text-3xl">Em destaque este mês</h2>
-            <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <h2 id="titulo-mes" className="text-xl font-bold sm:text-2xl text-escuro md:text-3xl">Em destaque este mês</h2>
+            <div className="mt-5 grid grid-cols-2 gap-3 sm:mt-6 sm:gap-5 lg:grid-cols-3">
               {doMes.map((p) => <ProCardView key={p.id} p={p} bloqueado={contactados.has(p.id)} />)}
             </div>
           </div>
         </section>
       )}
 
-      <section className="mx-auto max-w-7xl px-4 py-12" aria-labelledby="titulo-recomendados">
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:py-12" aria-labelledby="titulo-recomendados">
         <div className="flex flex-wrap items-end justify-between gap-3">
-          <h2 id="titulo-recomendados" className="text-2xl font-bold text-escuro md:text-3xl">Profissionais recomendados</h2>
+          <h2 id="titulo-recomendados" className="text-xl font-bold sm:text-2xl text-escuro md:text-3xl">Profissionais recomendados</h2>
           <Link href={`/profissionais?g=${grupo}`} className="text-base font-bold text-primaria underline">Ver todos</Link>
         </div>
         {recomendados.length === 0 ? (
@@ -135,7 +135,7 @@ export default async function Inicio({ searchParams }: { searchParams: { g?: str
             Ainda não há profissionais nesta área. Estamos a aprovar os primeiros.
           </p>
         ) : (
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:mt-6 sm:gap-5 lg:grid-cols-3">
             {recomendados.map((p) => <ProCardView key={p.id} p={p} bloqueado={contactados.has(p.id)} />)}
           </div>
         )}

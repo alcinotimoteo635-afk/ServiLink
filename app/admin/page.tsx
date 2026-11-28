@@ -49,25 +49,27 @@ export default async function Resumo() {
     ["Cidades mais pesquisadas", topo(pesquisas.map((x) => x.cidade))],
     ["Bairros mais pesquisados", topo(pesquisas.map((x) => x.bairro))],
   ];
-  const caixa = "rounded-2xl border border-slate-200 bg-white p-4";
+  const caixa = "rounded-xl border border-slate-200 bg-white p-3 sm:rounded-2xl sm:p-4";
+  const numero = "text-2xl font-extrabold text-primaria sm:text-3xl";
+  const legenda = "text-xs text-slate-700 sm:text-base";
   return (
     <div>
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        {cartoes.map(([t, n]) => <div key={t} className={caixa}><p className="text-3xl font-extrabold text-primaria">{n}</p><p className="text-base text-slate-700">{t}</p></div>)}
+      <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-4">
+        {cartoes.map(([t, n]) => <div key={t} className={caixa}><p className={numero}>{n}</p><p className={legenda}>{t}</p></div>)}
       </div>
-      <h2 className="mt-8 text-xl font-bold text-escuro">Últimos 30 dias</h2>
-      <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
-        {metricas.map(([t, n]) => <div key={t} className={caixa}><p className="text-3xl font-extrabold text-primaria">{n}</p><p className="text-base text-slate-700">{t}</p></div>)}
+      <h2 className="mt-5 text-lg font-bold text-escuro sm:mt-8 sm:text-xl">Últimos 30 dias</h2>
+      <div className="mt-2 grid grid-cols-2 gap-2 sm:mt-3 sm:gap-3 md:grid-cols-4">
+        {metricas.map(([t, n]) => <div key={t} className={caixa}><p className={numero}>{n}</p><p className={legenda}>{t}</p></div>)}
       </div>
-      <div className="mt-4 grid gap-3 md:grid-cols-3">
+      <div className="mt-3 grid gap-2 sm:mt-4 sm:gap-3 md:grid-cols-3">
         {listas.map(([t, l]) => (
           <div key={t} className={caixa}>
-            <p className="font-bold text-escuro">{t}</p>
-            {l.length ? <ol className="mt-2 space-y-1 text-base">{l.map(([k, n]) => <li key={k} className="flex justify-between"><span>{k}</span><strong>{n}</strong></li>)}</ol> : <p className="mt-2 text-base text-slate-600">Sem dados ainda.</p>}
+            <p className="text-sm font-bold text-escuro sm:text-base">{t}</p>
+            {l.length ? <ol className="mt-2 space-y-1 text-sm sm:text-base">{l.map(([k, n]) => <li key={k} className="flex justify-between"><span>{k}</span><strong>{n}</strong></li>)}</ol> : <p className="mt-2 text-sm text-slate-600 sm:text-base">Sem dados ainda.</p>}
           </div>
         ))}
       </div>
-      <div className="mt-6 space-y-2 text-base">
+      <div className="mt-4 space-y-2 text-sm sm:mt-6 sm:text-base">
         {!captchaConfigurado() && <p className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-amber-900">Captcha (Turnstile) não configurado: os formulários ficam sem proteção anti-robô.</p>}
         {!skywalletConfigurado() && <p className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-amber-900">SkyWallet não configurada: o pagamento do PRO fica indisponível.</p>}
       </div>
